@@ -1,0 +1,43 @@
+{
+  "name": "leko-team/tests",
+  "description": "Пакет с общими тестами и вспомогательными классами для Laravel",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pavel Andreev",
+      "email": "p.andreev@leko.team"
+    },
+    {
+      "name": "Oleg Kolzhanov",
+      "email": "o.kolzhanov@leko.team"
+    },
+    {
+      "name": "Andrey Ryabishnikov",
+      "email": "a.ryabishnikov@leko.team"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "illuminate/support": "^10.0|^11.0"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^8.0 || ^9.0",
+    "phpunit/phpunit": "^10.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "LekoTeam\\Tests\\": "src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": []
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  }
+}
