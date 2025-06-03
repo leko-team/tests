@@ -1,6 +1,7 @@
 {
   "name": "leko-team/tests",
   "description": "Пакет с общими тестами и вспомогательными классами для Laravel",
+  "version": "1.0.0",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -35,8 +36,6 @@
       "dont-discover": []
     }
   },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
   "scripts": {
     "test": "vendor/bin/phpunit"
   }
