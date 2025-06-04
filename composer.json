@@ -1,7 +1,7 @@
 {
   "name": "leko-team/tests",
   "description": "Пакет с общими тестами и вспомогательными классами для Laravel",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "library",
   "license": "MIT",
   "authors": [
