@@ -12,6 +12,7 @@ use Illuminate\Foundation\Application;
  */
 trait CreatesFeatureApplicationTrait
 {
+    use BootAppPathTrait;
     /**
      * Создаёт приложение.
      *
@@ -19,7 +20,7 @@ trait CreatesFeatureApplicationTrait
      */
     public function createApplication(): Application
     {
-        $app = require __DIR__ . '/../bootstrap/app.php';
+        $app = require self::getAppPath();;
 
         $app->make(Kernel::class)->bootstrap();
 
