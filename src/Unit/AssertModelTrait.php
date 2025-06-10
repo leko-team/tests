@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use PHPUnit\Framework\MockObject\MockBuilder;
 
 /**
@@ -443,6 +445,132 @@ trait AssertModelTrait
         $this->assertNotEmpty($result);
         $this->assertContainsOnlyInstancesOf($relatedClass, $result);
         $this->assertCount(count($items), $items);
+    }
+
+    /**
+     * Проверка связи MorphOne.
+     *
+     * @todo Добавить проверку необязательных параметров. Тут и в остальных методах.
+     * @param string $className Имя класса модели
+     * @param string $propertyName Свойство для получения зависимой модели
+     * @param string $relatedClass Класс зависимой модели
+     * @param string $relatedName Название метода зависимой модели
+     * @param string|null $relatedType Поле типа в текущей модели
+     * @param string|null $relatedField Поле в текущей модели
+     * @param string|null $ownerField Поле в зависимой модели
+     */
+    public function assertMorphOne(
+        string $className,
+        string $propertyName,
+        string $relatedClass,
+        string $relatedName,
+        ?string $relatedType = null,
+        ?string $relatedField = null,
+        ?string $ownerField = null,
+    ): void
+    {
+        $item = new $relatedClass;
+
+        $morphOne = $this->getMockBuilder(MorphOne::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getResults'])
+            ->getMock();
+        $morphOne->expects($this->once())
+            ->method('getResults')
+            ->willReturn($item);
+
+        $model = $this->getMockBuilder($className)
+            ->onlyMethods(['morphOne'])
+            ->getMock();
+        $model->expects($this->once())
+            ->method('morphOne')
+            ->with($relatedClass, $relatedName)
+            ->willReturn($morphOne);
+
+        /** @var Model $model Замоканная модель */
+        $result = $model->$propertyName;
+
+        $this->assertEquals($item, $result);
+        $this->assertNotEmpty($result);
+        $this->assertInstanceOf($relatedClass, $result);
+    }
+
+    /**
+     * Проверка связи MorphToMany.
+     *
+     * @param string $className Имя класса модели
+     * @param string $propertyName Свойство для получения зависимой модели
+     * @param string $relatedClass Класс зависимой модели
+     * @param string $relatedName Название связи
+     * @param string|null $message Сообщение
+     */
+    public function assertMorphToMany(
+        string $className,
+        string $propertyName,
+        string $relatedClass,
+        string $relatedName,
+        ?string $message = ''
+    ): void
+    {
+        $relatedModel = new $relatedClass;
+
+        $morphToMany = $this->getMockBuilder(MorphToMany::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getResults'])
+            ->getMock();
+        $morphToMany->expects($this->once())
+            ->method('getResults')
+            ->willReturn($relatedModel);
+
+        $model = $this->getMockBuilder($className)
+            ->onlyMethods(['morphToMany'])
+            ->getMock();
+        $model->expects($this->once())
+            ->method('morphToMany')
+            ->with($relatedClass, $relatedName)
+            ->willReturn($morphToMany);
+
+        /** @var Model $model */
+        $this->assertEquals($relatedModel, $model->$propertyName, $message);
+    }
+
+    /**
+     * Проверка связи MorphToMany.
+     *
+     * @param string $className Имя класса модели
+     * @param string $propertyName Свойство для получения зависимой модели
+     * @param string $relatedClass Класс зависимой модели
+     * @param string $relatedName Название связи
+     * @param string|null $message Сообщение
+     */
+    public function assertMorphedByMany(
+        string $className,
+        string $propertyName,
+        string $relatedClass,
+        string $relatedName,
+        ?string $message = ''
+    ): void
+    {
+        $relatedModel = new $relatedClass;
+
+        $morphToMany = $this->getMockBuilder(MorphToMany::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getResults'])
+            ->getMock();
+        $morphToMany->expects($this->once())
+            ->method('getResults')
+            ->willReturn($relatedModel);
+
+        $model = $this->getMockBuilder($className)
+            ->onlyMethods(['morphedByMany'])
+            ->getMock();
+        $model->expects($this->once())
+            ->method('morphedByMany')
+            ->with($relatedClass, $relatedName)
+            ->willReturn($morphToMany);
+
+        /** @var Model $model */
+        $this->assertEquals($relatedModel, $model->$propertyName, $message);
     }
 
     /**
